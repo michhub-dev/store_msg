@@ -8,6 +8,7 @@ import "hardhat/console.sol";
  
 
 contract sayHi {
+
 uint256 totalMsg;
 
 event NewMessage(address indexed from, uint256 timestamp, string message );
@@ -29,18 +30,19 @@ function sendmsg(string memory _message) public {
     totalMsg += 1;
     console.log("%s messages sent %s", msg.sender, _message);
 
+// store the message data in the array 
     sendMsgs.push(SendMsg(msg.sender, _message, block.timestamp));
 
     emit NewMessage(msg.sender, block.timestamp, _message); 
 }
 
 // this function will return the struct array and all messages 
-function getAllMessages() public view returns(SendMsg[] memory) {
+function getAllMessages() public view returns (SendMsg[] memory) {
    return sendMsgs; 
 }
 
 // to print the value
-function getTotalMessage() public view returns(uint256) {
+function getTotalMessage() public view returns (uint256) {
     console.log("there is %d total message", totalMsg);
     return totalMsg;
 }

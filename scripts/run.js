@@ -1,7 +1,7 @@
 const main = async () => {
      //  grab the wallet address of contract owner and a random wallet address
-    const [ owner, randomPerson ] = await hre.ethers.getSigners();
-    
+    //const [ owner, randomPerson ] = await hre.ethers.getSigners();
+
     // this will compile the contract and generate the necessary files needed to work with the contract under the artifacts
 const msgContractFactory = await hre.ethers.getContractFactory("sayHi");
 
@@ -16,14 +16,28 @@ console.log("contract deployed by..", owner.address);
 
 let msgCount;
 msgCount = await msgContract.getTotalMessage();
+console.log(msgCount.toNumber());
 
-let sendmsgTxn = await msgContract.sendmsg(); 
-await sendmsgTxn.wait();
-msgCount = await msgContract.getTotalMessage();
+// let's send a message 
+let sendmsgTxn = await msgContract.sendmsg("Hey, send eth"); 
+await sendmsgTxn.wait(); // wait for the transaction to be mined
 
+const [_, randomPerson ] = await hre.ethers.getSigners();
+sendmsgTxn = await msgContract.connect(randomPerson).sendmsg("Hi, pls send another eth!");
+await sendmsgTxn.wait() // wait for the transaction to be mined 
+
+let allMsgs = await msgContract.getAllMessages(); 
+console.log(allMsgs); 
+
+/* msgCount = await msgContract.getTotalMessage();
 let getAllMessagesTxn = msgContract.getAllMessages();
 await getAllMessagesTxn.wait();
 msgCount = await msgContract.getTotalMessage();
+
+sendmsgTxn = await msgContract.connect(randomPerson).sendmsg(); 
+await sendmsgTxn.wait();
+msgCount = await msgContract.getTotalMessage(); */
+
 };
 
 const runMain = async () => {
@@ -37,3 +51,4 @@ const runMain = async () => {
     }
 };
 runMain();
+
